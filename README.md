@@ -217,7 +217,7 @@ This will produce the result
     <span>Hello World</span>
 ```
 
-8.) If needed conditional statements can be used inside the arrow function callback.
+8.) If needed conditional statements can be used inside the arrow callback function.
 
 ```js
 
@@ -233,4 +233,14 @@ This will produce the result
 
     });
 
+```
+This code will produce either
+```html
+    <div>Hello World</div>
+```
+or
+```html
+    <div>
+        <h1>Hakuna Matata</h1>
+    </div>
 ```
