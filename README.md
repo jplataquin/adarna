@@ -1,6 +1,6 @@
 # Adarna
 
-Adarna is a suite of classes and functions that enable the development of web user interfaces, using purely javascript syntax.
+Adarna is a suite of classes and functions that enable the development of dynamic web user interfaces, using purely javascript syntax.
 ___
 
 ## Template Class
