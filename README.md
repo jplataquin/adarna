@@ -151,38 +151,38 @@ Will produce the HTML element
 
 5.) The Template elements can be called in different ways with optional parameters.
 
+Type 1 
 ```js
 
     /*
-        Type 1 
-        
         Parameter 1: Object for attributes
         Parameter 2: Arrow function callback for inner HTML 
     */
     t.div({},(el)=>{
 
     });
-
-    /*
-        Type 2
-        
+```
+ Type 2
+       
+```js
+    /* 
         Parameter 1: Object for attributes
         Parameter 2: String for inner text
     */
      t.div({},'Inner text');
-
+```
+Type 3
+```js
     /*
-        Type 3
-        
         Parameter 1: Arrow function callback for inner HTML 
     */
     t.div((el)=>{
 
     });
-
-    /*
-        Type 4
-        
+```
+Type 4
+```js
+    /*  
         Parameter 1: String for inner text 
     */
     t.div('Inner text');
