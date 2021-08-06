@@ -1,0 +1,19 @@
+{
+  "name": "adarna",
+  "version": "1.0.0",
+  "description": "Javascript suite of functions and classes for building user interfaces",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jplataquin/adarna.git"
+  },
+  "author": "John Patrick Lataquin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jplataquin/adarna/issues"
+  },
+  "homepage": "https://github.com/jplataquin/adarna#readme"
+}
