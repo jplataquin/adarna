@@ -240,13 +240,13 @@ This will produce the result
     <span>Hello World</span>
 ```
 
-8.) You can use conditional statements or complex logic inside the arrow callback function to produce desired results when generating an element.
+8.) You can declare conditional statements or complex logic inside the arrow callback function to produce desired results when generating an element.
 
 ```js
 
-    t.div(()=>{
+    let test = Math.random() < 0.5;
 
-        let test = Math.random() < 0.5;
+    t.div(()=>{
 
         if(test){
             t.txt('Hello World');
