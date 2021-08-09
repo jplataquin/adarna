@@ -2841,9 +2841,9 @@ export {
     removeEl,
     replaceEl,
     cloneEl,
-    elValue,
-    sendPost, 
-    sendGet,
+  //  elValue,
+   // sendPost, 
+   // sendGet,
     uuidv4,
-    componentFactory
+   // componentFactory
 }
