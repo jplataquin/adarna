@@ -1,6 +1,6 @@
 {
   "name": "adarna",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Adarna is a suite of classes and functions that enable the development of dynamic web user interfaces, using purely javascript syntax.",
   "main": "index.js",
   "scripts": {

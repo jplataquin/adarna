@@ -2110,25 +2110,12 @@ function objStructure(struct,obj){
     return newObj;
 }
 
-function interfaceEl(elem){
+function touchInterface(elem){
 
     let $this = {};
 
-
-    if(typeof elem._interface == 'undefined'){
-        elem._interface = {
-            draggable:{
-                off:()=>{}
-            },
-            pinch: {
-                off:()=>{}
-            }
-        }
-    }
-
     $this.draggable = (opt) => {
 
-        elem._interface.draggable.off();
 
         opt = objStructure({
             x: true,
@@ -2246,7 +2233,7 @@ function interfaceEl(elem){
         }
 
         if(opt.autoOn){
-            console.log('hello');
+          
             elem.addEventListener('mousedown',dragStart,false);
             elem.addEventListener('mousemove',drag,false);
             elem.addEventListener('mouseup',dragEnd,false); 
@@ -2258,33 +2245,22 @@ function interfaceEl(elem){
         }
 
 
-        elem._interface.draggable.off = ()=>{
-
-            elem.removeEventListener('mousedown',dragStart,false);
-            elem.removeEventListener('mousemove',drag,false);
-            elem.removeEventListener('mouseup',dragEnd,false); 
-            elem.removeEventListener('mouseout',dragEnd,false); 
-            
-            elem.removeEventListener('touchstart', dragStart, false);
-            elem.removeEventListener('touchend', dragEnd, false);
-            elem.removeEventListener('touchmove', drag, false);
-
-        }
 
         return {
             elem:elem,
-            pos: () => {
-
-                return {
-                    initialX: initialX,
-                    initialY: initialY,
-                    currentX: currentX,
-                    currentY: currentY,
-                    offsetX: offsetX,
-                    offsetY: offsetY
-                }
+            off: ()=>{
+                
+                elem.removeEventListener('mousedown',dragStart,false);
+                elem.removeEventListener('mousemove',drag,false);
+                elem.removeEventListener('mouseup',dragEnd,false); 
+                elem.removeEventListener('mouseout',dragEnd,false); 
+                
+                elem.removeEventListener('touchstart', dragStart, false);
+                elem.removeEventListener('touchend', dragEnd, false);
+                elem.removeEventListener('touchmove', drag, false);
+        
+                
             },
-            off: elem._interface.draggable.off,
 
             on: ()=>{
 
@@ -2303,13 +2279,12 @@ function interfaceEl(elem){
     $this.pinch = (opt)=>{
 
         opt = objStructure({
-            onChange: ()=>{}
+            onChange: ()=>{},
+            autoOn: true
         },opt);
 
-        let active          = false;
-        let initialDistance  = 0;
-        let startX          = 0;
-        let startY          = 0;
+        let active              = false;
+        let initialDistance     = 0;
 
         const touchStart = (e) => {
 
@@ -2318,24 +2293,15 @@ function interfaceEl(elem){
                 let pointCount = e.touches.length;
                
                 if(pointCount >= 2){
+                   
+                    let x1 = e.touches[0].clientX;
+                    let y1 = e.touches[0].clientY;
 
-                    x1 = e.touches[0].clientX;
-                    y1 = e.touches[0].clientY;
-
-                    x2 = e.touches[1].clientX;
-                    y2 = e.touches[1].clientY;
+                    let x2 = e.touches[1].clientX;
+                    let y2 = e.touches[1].clientY;
 
                     initialDistance = Math.sqrt( Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2) );
 
-                    active = true;
-                
-                }else{
-
-                    startX = e.touches[0].clientX;
-                    startY = e.touches[0].clientY; 
-
-                    active = true;
-                
                     active = true;
                 }
             }
@@ -2346,13 +2312,14 @@ function interfaceEl(elem){
         }
 
         const touchMove = (e) => {
-
+            
+            console.log('moveing',active);
             if(active){
 
                 let pointCount = e.touches.length;
-
-                if(pointCount >= 2){
                 
+                if(pointCount >= 2){
+                    
                     let x1 = e.touches[0].clientX;
                     let y1 = e.touches[0].clientY;
 
@@ -2361,39 +2328,50 @@ function interfaceEl(elem){
 
                     let newDistance = Math.sqrt( Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2) );
                     
-                    let percentage = ( newDistance / initialDistance ) * 100;
+                    let difference = newDistance - initialDistance;
+                    let percentage = (difference / initialDistance);
+                   
 
                     opt.onChange(e,percentage);
                 
-                }else{
-
-                    let x2 = e.touches[0].clientX;
-                    let y2 = e.touches[0].clientY;
-
-                    let newDistance = Math.sqrt( Math.pow((startX-x2), 2) + Math.pow((startY-y2), 2) );
-                    
-                    initialDistance = (initialDistance == 0) ? 1 : initialDistance;
-
-                    let percentage = ( newDistance / initialDistance ) * 100;
-
-                    opt.onChange(e,percentage);
-
-
-
                 }
+                
             }
         }
 
-        elem.addEventListener('touchstart', touchStart, false);
-        elem.addEventListener('touchend', touchEnd, false);
-        elem.addEventListener('touchmove', touchMove, false);
+        if(opt.autoOn){
+
+            elem.addEventListener('touchstart', touchStart, false);
+            elem.addEventListener('touchend', touchEnd, false);
+            elem.addEventListener('touchmove', touchMove, false);
+        }
+      
+
+
+        return {
+            elem:elem,
+            off: ()=>{
+                
+                elem.removeEventListener('touchstart', touchStart, false);
+                elem.removeEventListener('touchend', touchEnd, false);
+                elem.removeEventListener('touchmove', touchMove, false);
+        
+                
+            },
+
+            on: ()=>{
+
+                elem.addEventListener('touchstart', touchStart, false);
+                elem.addEventListener('touchend', touchEnd, false);
+                elem.addEventListener('touchmove', touchMove, false);
+            }
+        }
     }
 
 
 
     return $this;
 }
-
 
 
 
@@ -2835,7 +2813,7 @@ export {
     Watcher, 
     Signal,
     clientDebugger,
-    interfaceEl,
+    touchInterface,
     render,
     appendEl,
     removeEl,
