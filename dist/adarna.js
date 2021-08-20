@@ -1720,10 +1720,10 @@ function isFromDifferentComponent(item,id){
 
 function initializeDataEl($this,dom){
 
-    let els     = Array.from(dom.querySelectorAll('[data-el]'));
-    let elsArr  = Array.from(dom.querySelectorAll('[data-el-array]'));
+    let el     = Array.from(dom.querySelectorAll('[data-el]'));
+    let els  = Array.from(dom.querySelectorAll('[data-els]'));
 
-    els.map(item=>{
+    el.map(item=>{
 
         if(!isFromDifferentComponent(item,$this.dataId)){
             $this.el[item.getAttribute('data-el')] = item;
@@ -1731,16 +1731,16 @@ function initializeDataEl($this,dom){
     
     });
 
-    elsArr.map(item=>{
+    els.map(item=>{
 
         if(!isFromDifferentComponent(item,$this.dataId)){
             let name = item.getAttribute('data-el-array');
 
             if(typeof data[name] == 'undefined'){
-                $this.elsArr[name] = [];
+                $this.els[name] = [];
             }
 
-            $this.elsArr[name].push(item);
+            $this.els[name].push(item);
         }
     });
 
@@ -1782,7 +1782,7 @@ class Component {
     constructor(data){
 
         this.el                     = {};
-        this.elsArr                 = {};
+        this.els                    = {};
         this._resetBindedVariables  = {};
         this.model                  = this.model();
 
@@ -2018,7 +2018,7 @@ class Component {
             return {
                 as: (name)=>{
 
-                    variableName = variableName ?? 'el';
+                    variableName = (typeof variableName == 'undefined') ? 'el' : variableName;
 
                     if(typeof target[variableName] == 'undefined'){
                         target[variableName] = {};
@@ -2037,7 +2037,7 @@ class Component {
 
                 asArray: (name)=>{
 
-                    variableName = variableName ?? 'elArr';
+                    variableName = (typeof variableName == 'undefined') ? 'els' : variableName;
 
                     if(typeof target[variableName] == 'undefined'){
                         target[variableName] = {};
