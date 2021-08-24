@@ -71,34 +71,7 @@ function getAllComponents(elem){
    
     return items;
     
-    /*
-    let check = elem instanceof HTMLElement;
-
-    if(!check){
-        return [];
-    }
-
-    let children = elem.children;
-    let length   = elem.children.length - 1;
-    let i        = 0;
-
-    let items = [];
-
-    for(;i<=length; i++){
-
-     //   if(children[i].getAttribute('[data-component-id]')){
-
-            items.push(children[i]);
-
-            if(children[i].children.length){
-                
-                items = items.concat(getAllDecendants(children[i]));
-            }
-     //   }
-        
-    }
-
-    return items;*/
+   
 }
 
 function removeEl(target){
@@ -313,26 +286,18 @@ function render(element){
     }
 }
 
+function domReady(callback){
+    
+    let cb = ()=>{
+        callback();
+        window.removeEventListener('load',cb);
+    }
 
-function elValue(el,callback){
-
-    let a = (ev)=>{
-
-       callback(el.value,ev,a);
-        
-    };
-
-    addEventListener('keyup',a);
-
-    let b = (ev)=>{
-
-        callback(el.value,ev,b);
-        
-    };
-
-    el.addEventListener('change',b);
-
-    return el.value;
+    if(document.readyState === 'complete'){
+        cb();
+    }else{
+        window.addEventListener('load',cb);
+    }
 }
 
 function syncAttr(a,b){
@@ -2806,6 +2771,41 @@ function sendGet(data,settings){
 
 }
 
+/*
+function gridEl(top,middle,bottom){
+
+    t.div({
+        style:{
+            positon:'relative'
+        }
+    },()=>{
+        t.div({
+            style:{
+                postion:'absolute',
+                top:'0px'
+            }
+        },()=>{
+
+        });
+
+        t.div(()=>{
+
+        });
+
+
+        t.div({
+            style:{
+                postion:'absolute',
+                bottom:'0px'
+            }
+        },()=>{
+
+        });
+    })
+}**/
+
+
+
 export {
     ChunkUpload, 
     Component, 
@@ -2819,9 +2819,11 @@ export {
     removeEl,
     replaceEl,
     cloneEl,
+    domReady,
+    uuidv4
   //  elValue,
    // sendPost, 
    // sendGet,
-    uuidv4,
+    
    // componentFactory
 }
