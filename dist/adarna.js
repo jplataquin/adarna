@@ -2771,38 +2771,237 @@ function sendGet(data,settings){
 
 }
 
-/*
-function gridEl(top,middle,bottom){
 
-    t.div({
-        style:{
-            positon:'relative'
+
+function middleware(type,process){
+                
+    //If type is a function then type is the process
+    if(typeof type == 'function'){
+        process = type;
+        type = true; //default type to true
+    }
+
+    let t = 'sync'
+    
+    //If type is false then it's asynchronus
+    if(!type){
+        t = 'async'
+    }
+
+    //Return middleware structured object
+    return {
+        type: t,
+        process: process
+    }
+}
+
+class Router {
+
+    constructor(){
+        
+        //Singleton class, if router object already exists then return the object
+        if(typeof window.__$Router != 'undefined'){
+            return window.__$Router;
         }
-    },()=>{
-        t.div({
-            style:{
-                postion:'absolute',
-                top:'0px'
+
+        this.__$routesRegistry = {};
+        this.__$404 = {
+            callback: ()=>{},
+            middleware: []
+        };
+
+        
+        window.__$Router = this;
+
+        //Listen for URL change through popstate
+        window.addEventListener('popstate',  (event) => {
+
+            setTimeout(()=>{
+                this.run();
+            },0);
+        });//eventlistiner
+
+    }
+
+    setupAnchorTag(className,target){
+
+        if(typeof target == 'undefined'){
+            target = document.body;
+        }
+
+        if(typeof className != 'undefined'){
+
+            target.addEventListener('click',(e)=>{
+                
+                e.preventDefault();
+                
+                if(e.target.tagName == 'A' && e.target.classList.contains(className)){
+                    this.go(e.target.href);
+                }
+            });
+
+        }else{
+
+            target.addEventListener('click',(e)=>{
+                
+                e.preventDefault();
+                
+                if(e.target.tagName == 'A'){
+                    this.go(e.target.href);
+                }
+            });
+
+        }
+        
+    }
+
+    on(path,middleware,callback){
+        
+        path = path.trim();
+        
+        //Uniform empty URI
+        if(path == '/'){
+            path = '';
+        }
+        
+        //If first parameter is a function then set default middleware
+        if(typeof middleware == 'function'){
+            callback = middleware;
+            middleware = [];
+        }
+
+        this.__$routesRegistry[path] = {
+            middleware: middleware,
+            callback: callback
+        }
+
+        return this;
+    }
+
+
+    async run(){
+        
+        let path    = window.location.pathname ?? '/';
+        let items   = Object.keys(this.__$routesRegistry);
+
+        //Hack to uniform empty uri
+        if(path.charAt(path.length-1) == '/'){
+            path = path.substr(0,path.length-1);
+        }
+
+        //Flag to check if the route should go to 404
+        let flag = false;
+
+        //loop through routes
+        for(let i = 0; i<= items.length - 1; i++){
+            
+            let item    = items[i];
+            let orig    = item;
+
+            item        = item.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            item        = item.replaceAll('*','(.*)');
+            item        = item.replace(/\:([a-zA-Z0-9.]*)/g,'([a-zA-Z0-9]*)');
+            item        = '^'+item+'$';
+            
+            let pattern = new RegExp(item,'i');
+
+            //Match Route to URI
+            if(pattern.test(path)){
+                
+                //Get segment variables
+                let segment    = {};
+
+                if(orig.match(':')){
+                    
+                    let chunksOrig = orig.split('/');
+                    let chunksPath = path.split('/');
+
+                    for(let j = 0; j <= chunksOrig.length-1; j++){
+                        
+                        if(chunksOrig[j].charAt(0) == ':'){
+                            segment[chunksOrig[j].replaceAll(':','')] = chunksPath[j];
+                        }
+                    }
+                }
+
+                let syncMiddleware = [];
+                let asyncMiddleware = [];
+
+                //Sort sync and async middleware
+                for(let i = 0; i <= this.__$routesRegistry[ orig ].middleware.length - 1; i++){
+                    
+                    if(this.__$routesRegistry[ orig ].middleware[ i ].type == 'sync'){
+                        syncMiddleware.push(this.__$routesRegistry[ orig ].middleware[ i ].process);
+                    }else if(this.__$routesRegistry[ orig ].middleware[ i ].type == 'async'){
+                        asyncMiddleware.push(this.__$routesRegistry[ orig ].middleware[ i ].process);
+                    }
+                
+                }
+
+                //Run async middleware
+                for(let j = 0; j <= asyncMiddleware.length - 1; j++){
+                    asyncMiddleware[ j ](segment);
+                }
+
+                //Run sync middleware
+                let data = null;
+
+                for(let k = 0; k <= syncMiddleware.length - 1; k++){
+                    
+                    let status = true;
+
+                    data = await new Promise( (resolve,reject) => {
+                        
+                        syncMiddleware[ k ]({
+                            resolve:resolve,
+                            reject:reject
+                        },data,segment);
+
+                    }).catch((result)=>{
+                        status = false;
+                        return result;
+                    });
+
+                    if(status == false) return false;   
+                }
+
+                //Call the route callback
+                this.__$routesRegistry[ orig ].callback(data,segment);
+                
+                flag = true;
+
+                break;
             }
-        },()=>{
 
-        });
+        };
 
-        t.div(()=>{
+        //Run 404
+        if(!flag){
+            this.__$404.callback();
+        }
 
-        });
+    }
 
+    go(path){
+    
+        history.pushState({}, '',path);
 
-        t.div({
-            style:{
-                postion:'absolute',
-                bottom:'0px'
-            }
-        },()=>{
+        setTimeout(()=>{
 
-        });
-    })
-}**/
+            this.run();
+        },0);
+
+        return true;
+    }
+
+    on404(middleware, callback){
+        this.__$404.callback   = callback;
+        this.__$404.middleware = middleware;
+
+        return this;
+    }
+}
+
 
 
 
@@ -2812,6 +3011,8 @@ export {
     Template,
     Watcher, 
     Signal,
+    Router,
+    middleware,
     clientDebugger,
     touchInterface,
     render,
