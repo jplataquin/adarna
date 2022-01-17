@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Adarna HTML to Template Converter</title>
+
+        <style>
+            .input-area {
+                border: solid 1px #000000;
+                min-height: 500px;
+                overflow-x: auto;
+            }
+
+            .container {
+                width:100%;
+               display: flex; /* or inline-flex */
+            }
+
+            .item {
+                flex-grow:1;
+                max-width: 50%;
+                overflow-x: auto;
+            }
+
+            .align-center{
+                text-align: center;
+                margin: 0 auto;
+            }
+
+        </style>
+        <link href="prism.css" rel="stylesheet"/>
+        <script type="text/javascript" src="prism.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-css.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-html.min.js"></script>
+    </head>
+    <body>
+        <div class="align-center">
+            <h1>Adarna</h1>
+            <h2>HTML to Template Converter</h2>
+        </div>
+        <hr>
+        <div>
+            <div>
+                <label>Variable Name</label>
+                <input type="text" id="variableName" value="t"/>
+            </div>
+        </div>
+        <hr>
+        <div class="container">
+            <div class="item">
+                <h3>HTML</h3>
+                <pre id="html" class="input-area"></pre>
+            </div>
+            <div class="item">
+                <h3>Template <button id="copy">Copy to clipboard</button></h3>
+                <pre class="input-area"><code id="template" class="language-js"></code></pre>
+            </div>
+            
+        </div>
+
+
+        <script type="module">
+            
+            let html            = document.querySelector('#html');
+            let template        = document.querySelector('#template');
+            let variableNameEl  = document.querySelector('#variableName');
+            let copy            = document.querySelector('#copy');
+
+            let variableName = variableNameEl.value.trim() || 't';
+            
+            const selfClosingTags = [
+                'area',
+                'base',
+                'br',
+                'col',
+                'embed',
+                'hr',
+                'img',
+                'input',
+                'link',
+                'meta',
+                'param',
+                'source',
+                'track',
+                'wbr'
+            ];
+
+            html.addEventListener('paste', function(e) {
+                // Prevent the default action
+                e.preventDefault();
+
+                // Get the copied text from the clipboard
+                const text = (e.clipboardData)
+                    ? (e.originalEvent || e).clipboardData.getData('text/plain')
+                    // For IE
+                    : (window.clipboardData ? window.clipboardData.getData('Text') : '');
+                
+                if (document.queryCommandSupported('insertText')) {
+                    document.execCommand('insertText', false, text);
+                } else {
+                    // Insert text at the current position of caret
+                    const range = document.getSelection().getRangeAt(0);
+                    range.deleteContents();
+
+                    const textNode = document.createTextNode(text);
+                    range.insertNode(textNode);
+                    range.selectNodeContents(textNode);
+                    range.collapse(false);
+
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+            });
+
+            html.contentEditable = true;
+
+            let observer = new MutationObserver((m)=>{
+                template.innerHTML = js_beautify(convert(variableName,html.innerText)).trim();
+                Prism.highlightAll();
+            });
+
+            observer.observe(html, {
+                childList: true,
+                subtree : true,
+                characterData : true
+            });
+
+
+            variableNameEl.onchange = ()=>{
+
+                variableName = variableNameEl.value.trim() || 't';
+                template.innerHTML = js_beautify(convert(variableName,html.innerText)).trim();
+                Prism.highlightAll();
+            }
+
+            copy.onclick = ()=>{
+
+                navigator.clipboard.writeText(template.innerText).then(function() {
+                    alert('Copied to clipboard!');
+                }, function(err) {
+                    alert('Unable to copy');
+                    console.error('Async: Could not copy text: ', err);
+                });
+            }
+
+            function getTextFromTags(html){
+                
+                let sanitized   = '';
+                let lines       = html.split("\n");
+               
+                lines.map(item=>{
+                    
+                    item = item.trim().replaceAll("\n",'')+"\n".trim();
+                    
+                  
+                    if(item){
+                        sanitized += item;
+                    }
+                     
+                });
+
+
+                sanitized = sanitized.replaceAll(/>\n(.*?)\n*<|>(.*?)<|>(.*?)\n*<|>\n*(.*?)</gm,(token)=>{
+              
+                    let txt = token.trim().replaceAll("\n",'').replaceAll(/>(.*?)</gm,(str,match)=>{
+
+                        if(match){
+                      
+                            return ">\nt.txt('"+match+"');\n<";
+                        
+                        }else{
+                            return '><';
+                        }
+                    });
+
+                    return txt;
+                });
+
+
+                return sanitized;
+            }
+
+
+            function convert(v,text){
+                
+                text = getTextFromTags(text);
+                
+                let converted = text.replaceAll(/<(\s*[^>]*)>/g,(t,m)=>{
+                    
+                    let tokens = m.trim().split(" ");
+
+                    let tag = tokens[0].trim();
+
+                    let tag_spaced = tag.split(" ");
+                    
+                    if(tag_spaced.length){
+                        tag = tag_spaced[0];
+                    }
+                   
+                    let param = [];
+
+                    let attr = m.trim().match(/([^\r\n\t\f\v= '"]+)="(.*?)"/gm);
+                    
+                    if(attr){
+
+                        attr.map(item=>{
+                            let val = item.trim().match(/(["'])(.*?[^\\])\1/g);
+                            
+                            if(val){
+                                val = val[0];
+                            }else{
+                                val = '';
+                            }
+
+                            let name = item.trim().match(/([^\r\n\t\f\v= '"]+)/g);
+                            
+                            if(name){
+                                name = name[0] ?? ''
+                            }else{
+                                name = '';
+                            }
+
+                            name = name.replace(/(\-\w)/g, function(k) {
+                                return k[1].toUpperCase();
+                            });
+
+                            if(name){
+                                param.push(name+':'+val);
+                            }
+                        });
+                    }
+                   
+                   
+                    if(tag.charAt(0) != '/'){
+                        let ret = v+'.'+tag+'({'+param.join(',')+"},(el)=>{\n";
+                       
+                        if(selfClosingTags.includes(tag)){
+                            ret += "\n});\/\/"+tag+"\n";
+                        }
+
+                        return ret;
+
+                    }else{
+                        return "\n});\/"+tag+"\n";
+                    }
+                    
+                });
+
+                return converted;
+            }
+        </script>
+         
+
+
+
+    </body>
+</html>
