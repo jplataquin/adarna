@@ -2899,8 +2899,12 @@ class Router {
             let orig    = item;
 
             item        = item.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+            //Replace "*" token
             item        = item.replaceAll('*','(.*)');
-            item        = item.replace(/\:([a-zA-Z0-9.]*)/g,'([a-zA-Z0-9]*)');
+            
+            //Replace ":variable" token
+            item        = item.replace(/\:([a-zA-Z]*)/g,'([a-zA-Z0-9]*)');
             item        = '^'+item+'$';
             
             let pattern = new RegExp(item,'i');
