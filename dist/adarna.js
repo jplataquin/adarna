@@ -1,5 +1,5 @@
 /*!
- * Adarna v1.0.7
+ * Adarna v1.0.9
  * A suite of javascript classes that will help you build front end user interfaces.
  *
  * Author John Patrick Lataquin
@@ -779,13 +779,16 @@ function syncDOM(oldDOM,newDOM,callback){
 }
 
 
-if(typeof window.AdarnaSignalRegistry == 'undefined'){
-    window.AdarnaSignalRegistry = {};    
-}
+
 
 class Signal{
 
     constructor(){
+        
+        if(typeof window.AdarnaSignalRegistry == 'undefined'){
+            window.AdarnaSignalRegistry = {};    
+        }
+
         this.receiverRegistry = {};
     }
 
@@ -801,7 +804,7 @@ class Signal{
 
                 let reply = obj.callback(data,this);
 
-                if(typeof receiver != 'undefined' && typeof receiver == 'function'){
+                if(typeof receiver == 'function'){
 
                     receiver({
                         data:reply,
@@ -861,7 +864,7 @@ class Signal{
 
             let obj = this.receiverRegistry[key];
              //Global
-            let i = AdarnaSignalRegistry[key].indexOf({});
+            let i = AdarnaSignalRegistry[key].indexOf(obj);
 
 
             if(i > 0){
