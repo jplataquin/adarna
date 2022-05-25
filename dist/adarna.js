@@ -377,13 +377,16 @@ function syncDOM(oldDOM,newDOM,callback){
     if(newDOM.tracer){
         debug = true;
     }
-    //Clone of New Node
+
+    //Clone of New DOM
     let cloneDOM = newDOM.cloneNode(true);
 
     //Children of New DOM
     let children_of_new_DOM         = Array.from(newDOM.childNodes);
+
     //Children of Cloned New DOM
     let children_of_cloned_new_DOM  = Array.from(cloneDOM.childNodes);
+
     //Children of Old DOM
     let children_of_old_DOM         = Array.from(oldDOM.childNodes);
 
@@ -395,9 +398,6 @@ function syncDOM(oldDOM,newDOM,callback){
     let bID             = null;
     let aComponentName  = null;
     let bComponentName  = null;
-
-    //let onUpdateFlag = false;
-    //let persistFlag  = false;
 
     if(children_of_cloned_new_DOM.length >= children_of_old_DOM.length){
 
@@ -465,40 +465,15 @@ function syncDOM(oldDOM,newDOM,callback){
                     (aID != bID)
                 ){
                    
-                    /*
-                    if(typeof oldItem['component'] != 'undefined'){
-
-                        if(typeof oldItem['component']['onUpdate'] == 'function'){
-                            onUpdateFlag = true;
-                        }
-
-                        if(typeof oldItem['component']['persist'] != 'undefined'){
-                            persistFlag = oldItem.component.persist;
-                        }
-                    }**/
-
-                    /**
-                    if(persistFlag){
-                        
-                        if(onUpdateFlag){
-                            oldItem.component.onUpdate();
-                        }
-
-                        if(debug){
-                            debugger;
-                        }
-                        
-        **/
-             //       }else{
-
-                        log('syncDOM: C Component ('+oldItem.getAttribute('data-component-name')+' - '+oldItem.tagName.toLowerCase()+' - '+oldItem.getAttribute('data-component-id')+') is replaced with ('+newItem.getAttribute('data-component-name')+' - '+newItem.tagName.toLowerCase()+' - '+newItem.getAttribute('data-component-id')+')');
-                        
-                        if(debug){
-                            debugger;
-                        }
-                        
-                        replaceEl(oldItem).with(newItem);
-                 //   }
+    
+                    log('syncDOM: C Component ('+oldItem.getAttribute('data-component-name')+' - '+oldItem.tagName.toLowerCase()+' - '+oldItem.getAttribute('data-component-id')+') is replaced with ('+newItem.getAttribute('data-component-name')+' - '+newItem.tagName.toLowerCase()+' - '+newItem.getAttribute('data-component-id')+')');
+                    
+                    if(debug){
+                        debugger;
+                    }
+                    
+                    replaceEl(oldItem).with(newItem);
+                
                     
                 }else if(clonedItem.nodeName != oldItem.nodeName){
                     
@@ -573,39 +548,14 @@ function syncDOM(oldDOM,newDOM,callback){
                 debugger;
             }
 
-            /**
-            if(typeof oldItem['component'] != 'undefined'){
 
-                if(typeof oldItem['component']['onUpdate'] == 'function'){
-                    onUpdateFlag = true;
-                }
-
-                if(typeof oldItem['component']['persist'] != 'undefined'){
-                    persistFlag = oldItem.component.persist;
-                }
-            }**/
+            log('syncDOM: Component ('+oldDOM.getAttribute('data-component-name')+' - '+oldDOM.tagName.toLowerCase()+' - '+oldDOM.getAttribute('data-component-id')+') is replaced with ('+newDOM.getAttribute('data-component-name')+' - '+newDOM.tagName.toLowerCase()+' - '+newDOM.getAttribute('data-component-id')+')');
             
-            /**
-            if(persistFlag){
-               
-                if(debug){
-                    debugger;
-                }
-                
-                if(onUpdateFlag){
-                    oldDOM.component.onUpdate();
-                }
-
-            }else{**/
-
-                log('syncDOM: Component ('+oldDOM.getAttribute('data-component-name')+' - '+oldDOM.tagName.toLowerCase()+' - '+oldDOM.getAttribute('data-component-id')+') is replaced with ('+newDOM.getAttribute('data-component-name')+' - '+newDOM.tagName.toLowerCase()+' - '+newDOM.getAttribute('data-component-id')+')');
-                
-                if(debug){
-                    debugger;
-                }
-                
-                replaceEl(oldDOM).with(newDOM);
-          //  }
+            if(debug){
+                debugger;
+            }
+            
+            replaceEl(oldDOM).with(newDOM);
         
         }else{
         
@@ -664,50 +614,13 @@ function syncDOM(oldDOM,newDOM,callback){
                         (aComponentName == bComponentName)
                     ){
                         
-                        /*
-                        if(typeof oldItem['component'] != 'undefined'){
 
-                            if(typeof oldItem['component']['onUpdate'] == 'function'){
-                                onUpdateFlag = true;
-                            }
-    
-                            if(typeof oldItem['component']['persist'] != 'undefined'){
-                                persistFlag = oldItem.component.persist;
-                            }
-                        }*/
-                        /*
-                        if(persistFlag){
-                            
-                            if(debug){
-                                debugger;
-                            }
-        
-                            
-                            if(onUpdateFlag){
-                                if(debug){
-                                    debugger;
-                                }
-                                
-                                oldItem.component.onUpdate();
-
-                            }else{
-                                
-                                if(debug){
-                                    debugger;
-                                }
-                                
-                                replaceEl(oldItem).with(newItem);
-                            }
-            
-                        }else{**/
-
-                            log('syncDOM: C Component ('+oldItem.getAttribute('data-component-name')+' - '+oldItem.tagName.toLowerCase()+' - '+oldItem.getAttribute('data-component-id')+') is replaced with ('+newItem.getAttribute('data-component-name')+' - '+newItem.tagName.toLowerCase()+' - '+newItem.getAttribute('data-component-id')+')');
-                            if(debug){
-                                debugger;
-                            }
-                            
-                            replaceEl(oldItem).with(newItem);
-//                        }
+                        log('syncDOM: C Component ('+oldItem.getAttribute('data-component-name')+' - '+oldItem.tagName.toLowerCase()+' - '+oldItem.getAttribute('data-component-id')+') is replaced with ('+newItem.getAttribute('data-component-name')+' - '+newItem.tagName.toLowerCase()+' - '+newItem.getAttribute('data-component-id')+')');
+                        if(debug){
+                            debugger;
+                        }
+                        
+                        replaceEl(oldItem).with(newItem);
 
                     }else if(clonedItem.nodeName != oldItem.nodeName){ //If node Type is different
                        
@@ -1238,6 +1151,8 @@ class Template {
             "sub",
             "summary",
             "sup",
+            "svg",
+            "path",
             "table",
             "tbody",
             "td",
@@ -1686,15 +1601,19 @@ function isFromDifferentComponent(item,id){
     return false;
 }
 
-function initializeDataEl($this,dom){
+function initializeDataElements($this,dom){
 
-    let el     = Array.from(dom.querySelectorAll('[data-el]'));
+    let el   = Array.from(dom.querySelectorAll('[data-el]'));
     let els  = Array.from(dom.querySelectorAll('[data-els]'));
 
     el.map(item=>{
-
+        
         if(!isFromDifferentComponent(item,$this.dataId)){
-            $this.el[item.getAttribute('data-el')] = item;
+            
+            let name = item.getAttribute('data-el');
+
+            $this.el[name] = item;
+
         }
     
     });
@@ -1702,7 +1621,7 @@ function initializeDataEl($this,dom){
     els.map(item=>{
 
         if(!isFromDifferentComponent(item,$this.dataId)){
-            let name = item.getAttribute('data-el-array');
+            let name = item.getAttribute('data-els');
 
             if(typeof data[name] == 'undefined'){
                 $this.els[name] = [];
@@ -1712,6 +1631,50 @@ function initializeDataEl($this,dom){
         }
     });
 
+}
+
+
+function initializeElementValues($this,dom){
+
+    let els = Array.from(dom.querySelectorAll('input,select,textarea'));
+
+    for(let i = 0; i <= els.length - 1; i++){
+
+        let name =  els[i].name;
+
+        if(!name) continue;
+
+        $this.val[name] = (type)=>{
+
+            let elArr = Array.from(dom.querySelectorAll('[name="'+name+'"]'));
+
+            //Return value if only one
+            if(elArr.length == 1) return elArr[0].value;
+
+            let result = [];
+
+            elArr.map(itm =>{
+                if(itm.value){
+                    result.push(itm.value);
+                }
+            });
+
+            //If no result
+            if(!result.length) return '';
+
+            //If only one result
+            if(result.length == 1) return result[0];
+
+            //Return array of result
+            if(typeof type == 'undefined'){
+                return result;
+            }else if(type == true){ //Get only first value of result
+                return result[0];
+            }else if (type == false){ //Get only last value result
+                return result[result.length-1];
+            }
+        }
+    }
 }
 
 function initializeBindings(dom){
@@ -1751,11 +1714,11 @@ class Component {
 
         this.el                     = {};
         this.els                    = {};
+        this.val                    = {};
         this._resetBindedVariables  = {};
         this.model                  = this.model();
 
-        this.init(data);
-        
+  
         if(typeof data != 'undefined'){
             for(let key in this.model){
 
@@ -1765,10 +1728,12 @@ class Component {
             }    
         }
 
+        this.init();
+
         let componentName               = this.constructor.name;
         let checkIfStyleAlreadyExists   = document.querySelector('style[data-component-style="'+componentName+'"]');
         let styleObj                    = this.style();
-        let dataEl                      = {};
+       // let dataEl                      = {};
 
         if(styleObj && !checkIfStyleAlreadyExists){
 
@@ -1789,7 +1754,7 @@ class Component {
         
         let dom = this.view();
        
-        this.dataId = uuidv4();//performance.now();
+        this.dataId = uuidv4();
 
         dom.setAttribute('data-component-id',this.dataId);
         dom.setAttribute('data-component-name',componentName);
@@ -1800,102 +1765,13 @@ class Component {
         dom.handler     = {};
         
 
-        dom.component.$ = (query) => {
 
-            let target  = dom.querySelectorAll(query);
-            
-            let arr = [];
-
-            //Filter only those elements that belong to this component
-            Array.from(target).map(item=>{
-
-                if(!isFromDifferentComponent(item,this.dataId)){
-                    arr.push(item);
-                }
-            });
-
-            let eventsRegistry = {
-
-                click: []
-            }
-
-
-            for(let key in eventsRegistry){
-                
-                arr.map(elem=>{
-
-                    elem['on'+key] = (e)=>{
-
-                        if(eventsRegistry[key].length){
-    
-                            eventsRegistry[key].map(callback=>{
-    
-                                callback(e);
-    
-                            });
-                        }
-                    }//elem
-                });
-                
-            }
-
-            return {
-
-                el: target,
-
-                hide: function(){
-
-                    return this;
-                },
-                show: function(){
-
-                    return this;
-                },
-                
-                classAdd: function(c){
-
-                    arr.map(elem=>{
-                        elem.classList.add(c);
-                    });
-
-                    return this;
-                },
-
-                classRemove: function(c){
-
-                    arr.map(elem=>{
-                        elem.classList.remove(c);
-                    });
-                    
-                    return this;
-                },
-
-                on: function(action,callback){
-
-                    eventsRegistry[action].push(callback);
-                },
-
-                off: function(action,callback){
-
-                    let index = eventsRegistry[action].indexOf(callback);
-                    
-                    if(index > 0){
-
-                        eventsRegistry[action].splice(index,1);
-
-                    }
-                }
-            }
-
-        }//$()
-
-
-        initializeDataEl(this,dom);
+        initializeDataElements(this,dom);
+        initializeElementValues(this,dom);
         initializeBindings(dom);
 
         this.controller(dom);
-
-        this.ready();
+        
         
         this.update = (name,data,callback)=>{
         
@@ -1926,7 +1802,8 @@ class Component {
             
             dom = syncDOM(dom,newDOM,callback);
             
-            initializeDataEl(this,dom);
+            initializeDataElements(this,dom);
+            initializeElementValues(this,dom);
             initializeBindings(dom);
             
             this.controller(dom);
@@ -2046,13 +1923,11 @@ class Component {
 
     controller(){}
 
-    ready(){}
-
     style(){
         return {};
     }
 
-    onBeforeRender(newDom){}
+    onBeforeRender(){}
     onMount(ev){}
     onRemove(ev){}
     onPage(ev){}
@@ -2760,20 +2635,6 @@ function clientDebugger(callback){
     }
 }
 
-function componentFactory(_class){
-    return (param)=>{
-        return new _class(param);
-    }
-}
-
-function sendPost(data,settings){
-
-}
-
-function sendGet(data,settings){
-
-}
-
 
 
 function middleware(type,process){
@@ -2858,25 +2719,32 @@ class Router {
         
     }
 
-    on(path,middleware,callback){
+    on(items,middleware,callback){
         
-        path = path.trim();
-        
-        //Uniform empty URI
-        if(path == '/'){
-            path = '';
-        }
-        
-        //If first parameter is a function then set default middleware
-        if(typeof middleware == 'function'){
-            callback = middleware;
-            middleware = [];
+        if(typeof items == 'string'){
+            items = [items];
         }
 
-        this.__$routesRegistry[path] = {
-            middleware: middleware,
-            callback: callback
-        }
+        items.map(path=>{
+            
+            path = path.trim();
+            
+            //Uniform empty URI
+            if(path == '/'){
+                path = '';
+            }
+            
+            //If first parameter is a function then set default middleware
+            if(typeof middleware == 'function'){
+                callback = middleware;
+                middleware = [];
+            }
+
+            this.__$routesRegistry[path] = {
+                middleware: middleware,
+                callback: callback
+            }
+        });
 
         return this;
     }
@@ -2900,85 +2768,84 @@ class Router {
             
             let item    = items[i];
             let orig    = item;
-
-            item        = item.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
+            item        = item.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
             //Replace "*" token
             item        = item.replaceAll('*','(.*)');
-            
-            //Replace ":variable" token
+            //Replace required ":variable" token
             item        = item.replace(/\:([a-zA-Z]*)/g,'([a-zA-Z0-9]*)');
             item        = '^'+item+'$';
             
             let pattern = new RegExp(item,'i');
 
             //Match Route to URI
-            if(pattern.test(path)){
-                
-                //Get segment variables
-                let segment    = {};
-
-                if(orig.match(':')){
-                    
-                    let chunksOrig = orig.split('/');
-                    let chunksPath = path.split('/');
-
-                    for(let j = 0; j <= chunksOrig.length-1; j++){
-                        
-                        if(chunksOrig[j].charAt(0) == ':'){
-                            segment[chunksOrig[j].replaceAll(':','')] = chunksPath[j];
-                        }
-                    }
-                }
-
-                let syncMiddleware = [];
-                let asyncMiddleware = [];
-
-                //Sort sync and async middleware
-                for(let i = 0; i <= this.__$routesRegistry[ orig ].middleware.length - 1; i++){
-                    
-                    if(this.__$routesRegistry[ orig ].middleware[ i ].type == 'sync'){
-                        syncMiddleware.push(this.__$routesRegistry[ orig ].middleware[ i ].process);
-                    }else if(this.__$routesRegistry[ orig ].middleware[ i ].type == 'async'){
-                        asyncMiddleware.push(this.__$routesRegistry[ orig ].middleware[ i ].process);
-                    }
-                
-                }
-
-                //Run async middleware
-                for(let j = 0; j <= asyncMiddleware.length - 1; j++){
-                    asyncMiddleware[ j ](segment);
-                }
-
-                //Run sync middleware
-                let data = null;
-
-                for(let k = 0; k <= syncMiddleware.length - 1; k++){
-                    
-                    let status = true;
-
-                    data = await new Promise( (resolve,reject) => {
-                        
-                        syncMiddleware[ k ]({
-                            resolve:resolve,
-                            reject:reject
-                        },data,segment);
-
-                    }).catch((result)=>{
-                        status = false;
-                        return result;
-                    });
-
-                    if(status == false) return false;   
-                }
-
-                //Call the route callback
-                this.__$routesRegistry[ orig ].callback(data,segment);
-                
-                flag = true;
-
-                break;
+            if(!pattern.test(path)){
+                continue;
             }
+               
+            //Get segment variables
+            let segment    = {};
+
+            if(orig.match(':')){
+                
+                let chunksOrig = orig.split('/');
+                let chunksPath = path.split('/');
+
+                for(let j = 0; j <= chunksOrig.length-1; j++){
+                    
+                    if(chunksOrig[j].charAt(0) == ':'){
+                        segment[chunksOrig[j].replaceAll(':','')] = chunksPath[j];
+                    }
+                }
+            }
+
+            let syncMiddleware = [];
+            let asyncMiddleware = [];
+
+            //Sort sync and async middleware
+            for(let i = 0; i <= this.__$routesRegistry[ orig ].middleware.length - 1; i++){
+                
+                if(this.__$routesRegistry[ orig ].middleware[ i ].type == 'sync'){
+                    syncMiddleware.push(this.__$routesRegistry[ orig ].middleware[ i ].process);
+                }else if(this.__$routesRegistry[ orig ].middleware[ i ].type == 'async'){
+                    asyncMiddleware.push(this.__$routesRegistry[ orig ].middleware[ i ].process);
+                }
+            
+            }
+
+            //Run async middleware
+            for(let j = 0; j <= asyncMiddleware.length - 1; j++){
+                asyncMiddleware[ j ](segment);
+            }
+
+            //Run sync middleware
+            let data = null;
+
+            for(let k = 0; k <= syncMiddleware.length - 1; k++){
+                
+                let status = true;
+
+                data = await new Promise( (resolve,reject) => {
+                    
+                    syncMiddleware[ k ]({
+                        resolve:resolve,
+                        reject:reject
+                    },data,segment);
+
+                }).catch((result)=>{
+                    status = false;
+                    return result;
+                });
+
+                if(status == false) return false;   
+            }
+
+            //Call the route callback
+            this.__$routesRegistry[ orig ].callback(data,segment);
+            
+            flag = true;
+
+            break;
+           // }
 
         };
 
@@ -3001,6 +2868,32 @@ class Router {
         return true;
     }
 
+    back(num){
+
+        if(num == 0 || typeof num == 'undefined'){
+            num = -1;
+        }
+
+        if(num > 0){
+            num = num * -1;
+        }
+
+        window.history.go(num);
+    }
+
+    forward(num){
+
+        if(num == 0 || typeof num == 'undefined'){
+            num = 1;
+        }
+
+        if(num < 0){
+            num = num * -1;
+        }
+
+        window.history.go(num);
+    }
+
     on404(middleware, callback){
         this.__$404.callback   = callback;
         this.__$404.middleware = middleware;
@@ -3009,8 +2902,182 @@ class Router {
     }
 }
 
+function arrayElementRemove(arr,value){
+
+    let index = arr.indexOf(value);
+
+    if(index >=0){
+        return arr.splice(index,1);
+    }
+
+    return arr;
+}
 
 
+function dateTime(Y,M,d,h,m,s){
+
+    let _date;
+
+    if(typeof Y == 'object'){
+        _date = Y;
+    }else if(Y == 'now'){
+        _date = new Date();
+    }else{
+
+        Y = parseInt(Y);
+        M = parseInt(M);
+        d = parseInt(d);
+           
+        h = parseInt(h);
+        m = parseInt(m);
+        s = parseInt(s);
+
+        _date = new Date(Y,M-1,d,h,m,s);
+            
+    }
+  
+
+    let year     = _date.getFullYear();
+    let month    = _date.getMonth() + 1;
+    let date     = _date.getDate();
+    let hour     = _date.getHours();
+    let min      = _date.getMinutes();
+    let sec      = _date.getSeconds();
+    let unix     = _date.getTime();
+    let day      = _date.getDay();
+
+    const dayArr = [
+        {full:'Monday',short:'Mon',num:1},
+        {full:'Tuesday',short:'Tue',num:2},
+        {full:'Wednesday',short:'Wen',num:3},
+        {full:'Thursday',short:'Thu',num:4},
+        {full:'Friday',short:'Fri',num:5},
+        {full:'Saturday',short:'Sat',num:6},
+        {full:'Sunday',short:'Sun',num:7}
+    ];
+
+    const monthArr = [
+        {full:'January',short:'Jan'},
+        {full:'February',short:'Feb'},
+        {full:'March',short:'Mar'},
+        {full:'April',short:'Apr'},
+        {full:'May',short:'May'},
+        {full:'June',short:'Jun'},
+        {full:'July',short:'Jul'},
+        {full:'August',short:'Aug'},
+        {full:'September',short:'Sep'},
+        {full:'October',short:'Oct'},
+        {full:'November',short:'Nov'},
+        {full:'December',short:'Dec'}
+    ];
+
+    return {
+        unix:()=>{
+            return unix / 1000;
+        },
+        full:()=>{
+            return year+'-'+("0"+month).slice(-2)+'-'+("0"+date).slice(-2)+' '+("0"+hour).slice(-2)+':'+("0"+min).slice(-2)+':'+("0"+sec).slice(-2);
+        },
+        date:()=>{
+            return year+'-'+("0"+month).slice(-2)+'-'+("0"+date).slice(-2);
+        },
+        day:()=>{
+            return dayArr[day];
+        },
+        time12hrs:()=>{
+            return ("0"+(hour-12)).slice(-2)+':'+("0"+min).slice(-2)+':'+("0"+sec).slice(-2);
+        },
+        meridiem:()=>{
+            if(hour > 12){
+                return 'AM';
+            }else{
+                return 'PM';
+            }
+        },
+        time24hrs:()=>{
+            return ("0"+hour).slice(-2)+':'+("0"+min).slice(-2)+':'+("0"+sec).slice(-2);
+        },
+        M:()=>{
+            return month;
+        },
+        MM:()=>{
+            return ("0"+month).slice(-2);
+        },
+        month:()=>{
+            return monthArr[month-1];
+        },
+        d:()=>{
+            return date;
+        },
+        dd:()=>{
+            return ("0"+date).slice(-2);
+        },
+        yyyy:()=>{
+            return year;
+        },
+        h:()=>{
+            return hour;
+        },
+        hh:()=>{
+            return ("0"+hour).slice(-2);
+        },
+        m:()=>{
+            return min;
+        },
+        mm:()=>{
+            return ("0"+min).slice(-2);
+        },
+        s:()=>{
+            return sec;
+        },
+        ss:()=>{
+            return ("0"+sec).slice(-2);
+        },
+        increment:(type,i)=>{
+            
+            if(type == 'day'){
+                
+                _date.setDate(_date.getDate() + i);
+
+
+                let yr     = _date.getFullYear();
+                let mn     = _date.getMonth() + 1;
+                let dt     = _date.getDate();
+    
+    
+                return dateTime(yr,mn,dt);
+
+            }else if(type == 'hour'){
+
+                _date.setHours(_date.getHours() + i);
+
+
+                let yr     = _date.getFullYear();
+                let mn     = _date.getMonth() + 1;
+                let dt     = _date.getDate();
+                let hr     = _date.getHours();
+
+                return dateTime(yr,mn,dt,hr);
+            }
+          
+        },
+        instance:()=>{
+            return _date;
+        }
+    }
+}
+
+
+function $_GET(key){
+
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+    });
+    
+    // Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
+    return params[key] ?? ''; // "some_value"
+      
+}
 
 export {
     ChunkUpload, 
@@ -3020,18 +3087,16 @@ export {
     Signal,
     Router,
     middleware,
-    clientDebugger,
-    touchInterface,
+    //clientDebugger,
+    //touchInterface,
     render,
     appendEl,
     removeEl,
     replaceEl,
     cloneEl,
     domReady,
-    uuidv4
-  //  elValue,
-   // sendPost, 
-   // sendGet,
-    
-   // componentFactory
+    uuidv4,
+    arrayElementRemove,
+    dateTime,
+    $_GET
 }
