@@ -1,5 +1,5 @@
 /*!
- * Adarna v1.0.9
+ * Adarna v1.0.21
  * A suite of javascript classes that will help you build front end user interfaces.
  *
  * Author John Patrick Lataquin
