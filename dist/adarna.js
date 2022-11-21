@@ -1,6 +1,6 @@
 /*!
- * Adarna v1.0.22
- * A suite of javascript classes that will help you build front end user interfaces.
+ * Adarna v1.0.23
+ * A suite of javascript classes and functions that will help you build dynamic user interfaces.
  *
  * Author John Patrick Lataquin
  * Released under the MIT license
@@ -3177,6 +3177,10 @@ const util = {
     array: arr,
     dateTime: dateTime,
     uuidv4: uuidv4,
+    insertAtCaret: (newText, el = document.activeElement) => {
+        const [start, end] = [el.selectionStart, el.selectionEnd];
+        el.setRangeText(newText, start, end, 'select');
+    }
 }
 
 export {
