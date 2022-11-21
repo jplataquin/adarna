@@ -1,7 +1,7 @@
 {
   "name": "adarna",
-  "version": "1.0.21",
-  "description": "Adarna is a suite of classes and functions that enable the development of dynamic web user interfaces, using purely javascript syntax.",
+  "version": "1.0.22",
+  "description": "Adarna is a suite of classes and functions that aid in the development of dynamic user interfaces.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

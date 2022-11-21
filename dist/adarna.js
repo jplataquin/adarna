@@ -1,5 +1,5 @@
 /*!
- * Adarna v1.0.21
+ * Adarna v1.0.22
  * A suite of javascript classes that will help you build front end user interfaces.
  *
  * Author John Patrick Lataquin
@@ -93,6 +93,23 @@ function removeEl(target){
    target.dispatchEvent(removeEvent);
 
    parent.removeChild(target);
+}
+
+function clearEl(target){
+
+    let components = getAllComponents(target);
+
+    let removeEvent = new CustomEvent('adarna-on-remove',{
+         detail:{
+             from: parent
+         }
+     });
+ 
+    components.map((el)=>{
+         el.dispatchEvent(removeEvent);
+    });
+ 
+    target.html = '';
 }
 
 function appendEl(element){
@@ -3079,6 +3096,89 @@ function $_GET(key){
       
 }
 
+
+function $q(query,dom){
+
+    if(typeof dom == 'undefined'){
+        dom = window.document;
+    }
+
+    let elements = Array.from(dom.querySelectorAll(query)) ?? [];
+
+    return {
+
+        exists: ()=>{
+            
+            if(elements.length) return true;
+
+            return false;
+        },
+
+        apply: (callback)=>{
+
+            elements.map(callback);
+            
+        },
+
+        first: ()=>{
+            return elements[0] ?? false;
+        },
+
+        last: ()=>{
+            return elements[ elements.length - 1 ] ?? false;
+        },
+
+        items: ()=>{
+            return elements;
+        }
+    }
+}
+
+const $el = {
+    append: appendEl,
+    remove: removeEl,
+    replace: replaceEl,
+    clone: cloneEl,
+}
+
+function arr(arr){
+
+    return {
+        remove: (target) => {
+            return arrayElementRemove(arr,target);
+        },
+        last: ()=>{
+            return arr[arr.length - 1];
+        },
+        insertAt: (index,item)=>{
+            return arr.splice(index, 0, item);
+        },
+        shuffle: ()=>{
+            
+            let currentIndex = arr.length,  randomIndex;
+
+            // While there remain elements to shuffle.
+            while (currentIndex != 0) {
+          
+              // Pick a remaining element.
+              randomIndex = Math.floor(Math.random() * currentIndex);
+              currentIndex--;
+          
+              // And swap it with the current element.
+              [ arr[currentIndex], arr[randomIndex] ] = [ arr[randomIndex], arr[currentIndex] ];
+            }
+          
+            return arr;
+        }
+    }
+}
+
+const util = {
+    array: arr,
+    dateTime: dateTime,
+    uuidv4: uuidv4,
+}
+
 export {
     ChunkUpload, 
     Component, 
@@ -3087,16 +3187,9 @@ export {
     Signal,
     Router,
     middleware,
-    //clientDebugger,
-    //touchInterface,
-    render,
-    appendEl,
-    removeEl,
-    replaceEl,
-    cloneEl,
+    $q,
     domReady,
-    uuidv4,
-    arrayElementRemove,
-    dateTime,
-    $_GET
+    $_GET,
+    util,
+    $el
 }
